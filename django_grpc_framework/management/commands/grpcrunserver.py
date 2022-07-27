@@ -61,11 +61,12 @@ class Command(BaseCommand):
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=self.max_workers),
                              interceptors=grpc_settings.SERVER_INTERCEPTORS)
         grpc_settings.ROOT_HANDLERS_HOOK(server)
-        grpc_secure_credentials = getattr("settings", "GRPC_SERVER_CREDENTIALS", None)
-        if grpc_secure_credentials is not None:
+        try:
+            grpc_secure_credentials = settings.GRPC_SERVER_CREDENTIALS
             server.add_secure_port(self.address, grpc_secure_credentials)
-        else:
+        except Exception as e:
             server.add_insecure_port(self.address)
+            pass
         server.start()
         server.wait_for_termination()
 
