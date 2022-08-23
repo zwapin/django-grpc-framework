@@ -16,9 +16,6 @@ from django_grpc_framework.settings import grpc_settings
 class Command(BaseCommand):
     help = 'Starts a gRPC server.'
 
-    # Validation is called explicitly each time the server is reloaded.
-    requires_system_checks = False
-
     def add_arguments(self, parser):
         parser.add_argument(
             'address', nargs='?', default='[::]:50051',
